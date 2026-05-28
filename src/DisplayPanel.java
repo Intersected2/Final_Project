@@ -1,28 +1,33 @@
 import javax.imageio.ImageIO;
-import javax.swing.JPanel;
+import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.Graphics;
 import java.awt.Font;
 import java.awt.Color;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.awt.MouseInfo;
+import java.awt.*;
 
-public class DisplayPanel extends JPanel implements MouseListener, KeyListener {
+public class DisplayPanel extends JPanel implements MouseListener, KeyListener, ActionListener, MouseMotionListener{
+
     private int score;
     private int xpos;
     private int ypos;
     private int ranposx;
     private int ranposy;
     private int distance;
+    private int mousex;
+    private int mousey;
+    private Point mpos; //mouse pos
 //    private boolean yellowColor;
 //    private int marioX;
 //    private int marioY;
 //    private BufferedImage background;
 //    private BufferedImage mario;
+    private Timer timer;
 
     public DisplayPanel() {
         score = 0;
@@ -41,8 +46,11 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener {
 //        }
         addMouseListener(this);
         addKeyListener(this);
+        addMouseMotionListener(this);
         setFocusable(true); // this line of code + one below makes this panel active for keylistener events
         requestFocusInWindow(); // see comment above
+        timer = new Timer(10, this);
+        timer.start();
     }
 
     @Override
@@ -58,8 +66,8 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener {
 //        } else {
 //            g.setColor(Color.BLACK);
 //        }
-        changepos();
         g.drawString("Score: " + score, 50, 30);
+        g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
         g.setColor(Color.RED);
         g.fillOval(xpos,ypos,50,50);
     }
@@ -68,6 +76,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener {
         ranposy = (int) (Math.random() * 471);
         xpos = ranposx;
         ypos = ranposy;
+        requestFocusInWindow();
     }
     @Override
     public void mouseClicked(MouseEvent e) { } // unimplemented
@@ -79,12 +88,9 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-//        if (e.getButton() == MouseEvent.BUTTON1) {
-//            score++;
-//            repaint();
-//        }
-        if (e.getButton() == MouseEvent.BUTTON1 && ){
+        if (e.getButton() == MouseEvent.BUTTON1){
             repaint();
+            changepos();
         }
     }
 
@@ -115,7 +121,27 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener {
 //            repaint();
 //        }
     }
-
     @Override
     public void keyReleased(KeyEvent e) { }  // unimplemented
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+//        mpos = MouseInfo.getPointerInfo().getLocation();
+//        mousex = (int) MouseInfo.getPointerInfo().getLocation().getX();
+//        mousey = (int) MouseInfo.getPointerInfo().getLocation().getY();
+        repaint();
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        mpos = e.getPoint();
+        mousex = (int) mpos.getX();
+        mousey = (int) mpos.getY();
+    }
 }
