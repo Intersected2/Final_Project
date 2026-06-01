@@ -10,9 +10,11 @@ import java.io.File;
 import java.io.IOException;
 import java.awt.MouseInfo;
 import java.awt.*;
+import java.security.Key;
 
 public class DisplayPanel extends JPanel implements MouseListener, KeyListener, ActionListener, MouseMotionListener{
-
+    public int fortesting;
+    private boolean start;
     private int score;
     private int xpos;
     private int ypos;
@@ -22,12 +24,14 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private int mousex;
     private int mousey;
     private Point mpos; //mouse pos
+    private int timercount; //counts the ms for the ingame timer not the timer object
 //    private boolean yellowColor;
 //    private int marioX;
 //    private int marioY;
 //    private BufferedImage background;
 //    private BufferedImage mario;
     private Timer timer;
+    private Timer clockTimer;
 
     public DisplayPanel() {
         score = 0;
@@ -50,7 +54,9 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         setFocusable(true); // this line of code + one below makes this panel active for keylistener events
         requestFocusInWindow(); // see comment above
         timer = new Timer(10, this);
+        clockTimer = new Timer(1000, this);
         timer.start();
+        clockTimer.start();
     }
 
     @Override
@@ -66,8 +72,10 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
 //        } else {
 //            g.setColor(Color.BLACK);
 //        }
+        g.setColor(Color.BLACK);
         g.drawString("Score: " + score, 50, 30);
         g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
+        g.drawString("Time: " + (timercount), 200, 30);
         g.setColor(Color.RED);
         g.fillOval(xpos,ypos,50,50);
     }
@@ -106,6 +114,15 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
+        if (keyCode == KeyEvent.VK_M && start == false){
+//            fortesting++;
+//            System.out.println(fortesting);
+            start = true;
+            System.out.println(start);
+        }else if (keyCode == KeyEvent.VK_M && start == true){
+            start = false;
+            System.out.println(start);
+        }
 //        if (keyCode == KeyEvent.VK_A) {  // A key; VK_A equals 65
 //            marioX -= 5;
 //            try {
@@ -124,13 +141,23 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     @Override
     public void keyReleased(KeyEvent e) { }  // unimplemented
 
+    public void timerlogic(){
+        if (start == false){
+            timercount = 0;
+        }else if (start == true){
+            timercount++;
+        }
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-//        mpos = MouseInfo.getPointerInfo().getLocation();
-//        mousex = (int) MouseInfo.getPointerInfo().getLocation().getX();
-//        mousey = (int) MouseInfo.getPointerInfo().getLocation().getY();
-        repaint();
+        if (e.getSource() == timer) {
+            repaint();
+        }
+        if (e.getSource() == clockTimer) {
+            timerlogic();
+            repaint();
+        }
     }
 
     @Override
