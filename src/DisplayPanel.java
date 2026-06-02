@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.event.*;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +21,8 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private int ypos;
     private int ranposx;
     private int ranposy;
-    private int distance;
+    private double distance;
+    private int radius;
     private int mousex;
     private int mousey;
     private Point mpos; //mouse pos
@@ -34,6 +36,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private Timer clockTimer;
 
     public DisplayPanel() {
+        radius = 25;
         score = 0;
 //        yellowColor = true;
 //        marioX = 50;
@@ -53,6 +56,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         addMouseMotionListener(this);
         setFocusable(true); // this line of code + one below makes this panel active for keylistener events
         requestFocusInWindow(); // see comment above
+        changepos();
         timer = new Timer(10, this);
         clockTimer = new Timer(1000, this);
         timer.start();
@@ -62,22 +66,14 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-//        g.drawImage(background, 0, 0, null);
-//        g.drawImage(mario, marioX, marioY, null);
-
-        // set font and color of text
         g.setFont(new Font("Arial", Font.BOLD, 16));
-//        if (yellowColor) {
-//            g.setColor(Color.YELLOW);
-//        } else {
-//            g.setColor(Color.BLACK);
-//        }
         g.setColor(Color.BLACK);
         g.drawString("Score: " + score, 50, 30);
         g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
         g.drawString("Time: " + (timercount), 200, 30);
         g.setColor(Color.RED);
-        g.fillOval(xpos,ypos,50,50);
+        g.fillOval(xpos,ypos,radius * 2,radius * 2);
+        startscreen(g);
     }
     public void changepos(){
         ranposx = (int) (Math.random() * 861);
@@ -88,15 +84,14 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     }
     @Override
     public void mouseClicked(MouseEvent e) { } // unimplemented
-    // unimplemented because if you move your mouse while clicking, this method isn't
-    // called, so mouseReleased is best
 
     @Override
     public void mousePressed(MouseEvent e) { } // unimplemented
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1){
+        if (e.getButton() == MouseEvent.BUTTON1 && inradofcircle() && start){
+            score++;
             repaint();
             changepos();
         }
@@ -114,36 +109,22 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        if (keyCode == KeyEvent.VK_M && start == false){
-//            fortesting++;
-//            System.out.println(fortesting);
+        if (keyCode == KeyEvent.VK_M && start == false){ //turns the game on or off
+
             start = true;
             System.out.println(start);
         }else if (keyCode == KeyEvent.VK_M && start == true){
             start = false;
             System.out.println(start);
         }
-//        if (keyCode == KeyEvent.VK_A) {  // A key; VK_A equals 65
-//            marioX -= 5;
-//            try {
-//                mario = ImageIO.read(new File("src/marioleft.png"));
-//            } catch (IOException error) { }
-//            repaint();
-//        }
-//        if (keyCode == KeyEvent.VK_D) {  // D key; VK_D equals 65
-//            marioX += 5;
-//            try {
-//                mario = ImageIO.read(new File("src/marioright.png"));
-//            } catch (IOException error) { }
-//            repaint();
-//        }
     }
     @Override
     public void keyReleased(KeyEvent e) { }  // unimplemented
 
-    public void timerlogic(){
+    public void timerlogic(){ //sets up the timer ui
         if (start == false){
             timercount = 0;
+            score = 0;
         }else if (start == true){
             timercount++;
         }
@@ -151,8 +132,9 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == timer) {
+        if (e.getSource() == timer) { //
             repaint();
+            inradofcircle();
         }
         if (e.getSource() == clockTimer) {
             timerlogic();
@@ -166,9 +148,31 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {
+    public void mouseMoved(MouseEvent e) { //returns mouse coords
         mpos = e.getPoint();
         mousex = (int) mpos.getX();
         mousey = (int) mpos.getY();
+    }
+    private boolean inradofcircle(){ // finds the distance between the center of the circle and mouse location
+        double ramx = 0;
+        double ramy = 0;
+        ramx = Math.abs(mousex - radius - xpos);
+        ramx = ramx * ramx;
+        ramy = Math.abs(mousey - radius - ypos);
+        ramy = ramy * ramy;
+        distance = Math.sqrt(ramx + ramy);
+        if (distance < radius){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    private void startscreen(Graphics g){
+        super.paintComponent(g);
+        if (!start){ //for if start is false
+            g.setColor(Color.BLACK);
+            g.setFont(new Font("Arial", Font.PLAIN , 30));
+            g.drawString("Press \"m\" to start", 200, 350);
+        }
     }
 }
