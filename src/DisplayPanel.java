@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.event.*;
-import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -27,30 +26,15 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private int mousey;
     private Point mpos; //mouse pos
     private int timercount; //counts the ms for the ingame timer not the timer object
-//    private boolean yellowColor;
-//    private int marioX;
-//    private int marioY;
-//    private BufferedImage background;
-//    private BufferedImage mario;
     private Timer timer;
     private Timer clockTimer;
+    private boolean gameend;
+    private Tscore s;
 
     public DisplayPanel() {
+        s = new Tscore(0);
         radius = 25;
         score = 0;
-//        yellowColor = true;
-//        marioX = 50;
-//        marioY = 435;
-//        try {
-//            background = ImageIO.read(new File("src/background.png"));
-//        } catch (IOException e) {
-//            System.out.println(e.getMessage());
-//        }
-//        try {
-//            mario = ImageIO.read(new File("src/marioright.png"));
-//        } catch (IOException e) {
-//            System.out.println(e.getMessage());
-//        }
         addMouseListener(this);
         addKeyListener(this);
         addMouseMotionListener(this);
@@ -62,18 +46,12 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         timer.start();
         clockTimer.start();
     }
-
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setFont(new Font("Arial", Font.BOLD, 16));
-        g.setColor(Color.BLACK);
-        g.drawString("Score: " + score, 50, 30);
-        g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
-        g.drawString("Time: " + (timercount), 200, 30);
-        g.setColor(Color.RED);
-        g.fillOval(xpos,ypos,radius * 2,radius * 2);
+        displaytarget(g);
         startscreen(g);
+        checksgameend(g);
     }
     public void changepos(){
         ranposx = (int) (Math.random() * 861);
@@ -83,11 +61,13 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         requestFocusInWindow();
     }
     @Override
-    public void mouseClicked(MouseEvent e) { } // unimplemented
+    public void mouseClicked(MouseEvent e) {  // unimplemented
 
+    }
     @Override
-    public void mousePressed(MouseEvent e) { } // unimplemented
+    public void mousePressed(MouseEvent e) { // unimplemented
 
+    }
     @Override
     public void mouseReleased(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1 && inradofcircle() && start){
@@ -96,16 +76,18 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             changepos();
         }
     }
-
     @Override
-    public void mouseEntered(MouseEvent e) { } // unimplemented
+    public void mouseEntered(MouseEvent e) {// unimplemented
 
+    }
     @Override
-    public void mouseExited(MouseEvent e) { } // unimplemented
+    public void mouseExited(MouseEvent e) { // unimplemented
 
+    }
     @Override
-    public void keyTyped(KeyEvent e) { } // unimplemented
+    public void keyTyped(KeyEvent e) { // unimplemented
 
+    }
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
@@ -113,23 +95,24 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
 
             start = true;
             System.out.println(start);
-        }else if (keyCode == KeyEvent.VK_M && start == true){
+        }else if (keyCode == KeyEvent.VK_M && start){
             start = false;
             System.out.println(start);
+        }else if (keyCode == KeyEvent.VK_Q && gameend){
+            gameend = false;
         }
     }
     @Override
-    public void keyReleased(KeyEvent e) { }  // unimplemented
+    public void keyReleased(KeyEvent e) {   // unimplemented
 
+    }
     public void timerlogic(){ //sets up the timer ui
         if (start == false){
-            timercount = 0;
-            score = 0;
+            timercount = 5;
         }else if (start == true){
-            timercount++;
+            timercount--;
         }
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == timer) { //checks constantly if the mouse is close enough to the target or nah
@@ -141,15 +124,16 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         }
         if (e.getSource() == clockTimer) {
             timerlogic();
+            if (timercount <= -1){
+                start = false;
+                gameend = true;
+            }
             repaint();
         }
     }
-
     @Override
     public void mouseDragged(MouseEvent e) {
-
     }
-
     @Override
     public void mouseMoved(MouseEvent e) { //returns mouse coords
         mpos = e.getPoint();
@@ -170,12 +154,36 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             return false;
         }
     }
-    private void startscreen(Graphics g){
-        if (!start) { //for if start is false
+    private void startscreen(Graphics g){  // basically menu screen stuff
+        if (!start && !gameend) { //for if start is false
+            repaint();
             super.paintComponent(g);
             g.setColor(Color.BLACK);
             g.setFont(new Font("Arial", Font.PLAIN, 30));
             g.drawString("Press \"m\" to start", 360, 260);
+            g.setFont(new Font("Arial", Font.PLAIN, 16));
+            g.drawString("Total score: " + s.getTotalScore(), 10, 15);
         }
+    }
+    private void displayscore(Graphics g){ // basically what to display after the game ends
+        super.paintComponent(g);
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.PLAIN, 30));
+        g.drawString("Your score was: " + score, 360, 260);
+        g.drawString("Press \"q\" to go back to the menu", 265, 300);
+    }
+    private void checksgameend(Graphics g){ //just checks if game ends
+        if (gameend){
+            displayscore(g);
+        }
+    }
+    private void displaytarget(Graphics g){ //what to display when the game is going on
+        g.setFont(new Font("Arial", Font.BOLD, 16));
+        g.setColor(Color.BLACK);
+        g.drawString("Score: " + score, 50, 30);
+        g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
+        g.drawString("Time: " + (timercount), 200, 30);
+        g.setColor(Color.RED);
+        g.fillOval(xpos,ypos,radius * 2,radius * 2);
     }
 }
