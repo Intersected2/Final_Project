@@ -132,9 +132,12 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == timer) { //
-            repaint();
+        if (e.getSource() == timer) { //checks constantly if the mouse is close enough to the target or nah
             inradofcircle();
+//            if (inradofcircle()){
+//                System.out.println("magic");
+//            }
+            repaint();
         }
         if (e.getSource() == clockTimer) {
             timerlogic();
@@ -168,11 +171,11 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         }
     }
     private void startscreen(Graphics g){
-        super.paintComponent(g);
-        if (!start){ //for if start is false
+        if (!start) { //for if start is false
+            super.paintComponent(g);
             g.setColor(Color.BLACK);
-            g.setFont(new Font("Arial", Font.PLAIN , 30));
-            g.drawString("Press \"m\" to start", 200, 350);
+            g.setFont(new Font("Arial", Font.PLAIN, 30));
+            g.drawString("Press \"m\" to start", 360, 260);
         }
     }
 }
