@@ -16,4 +16,7 @@ public class Tscore { //This class tracks total score and highest scores
             maxscore = score;
         }
     }
+    public int getMaxscore(){
+        return maxscore;
+    }
 }

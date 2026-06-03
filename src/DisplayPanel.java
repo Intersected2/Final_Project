@@ -30,8 +30,14 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private Timer clockTimer;
     private boolean gameend;
     private Tscore s;
+    private int settime;
+    private boolean detectm1; //detects if player click (important)
+    private Timer tracer;
+    private int clickrate;
 
     public DisplayPanel() {
+        settime = 5;
+        timercount = 0;
         s = new Tscore(0);
         radius = 25;
         score = 0;
@@ -43,6 +49,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         changepos();
         timer = new Timer(10, this);
         clockTimer = new Timer(1000, this);
+        tracer = new Timer(100, this);
         timer.start();
         clockTimer.start();
     }
@@ -52,6 +59,9 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         displaytarget(g);
         startscreen(g);
         checksgameend(g);
+        if (detectm1){
+            drawtracers(g);
+        }
     }
     public void changepos(){
         ranposx = (int) (Math.random() * 861);
@@ -66,7 +76,10 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     }
     @Override
     public void mousePressed(MouseEvent e) { // unimplemented
-
+        if (e.getButton() == MouseEvent.BUTTON1 && !detectm1){
+            detectm1 = true;
+            tracer.start();
+        }
     }
     @Override
     public void mouseReleased(MouseEvent e) {
@@ -92,14 +105,16 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
         if (keyCode == KeyEvent.VK_M && start == false){ //turns the game on or off
-
             start = true;
-            System.out.println(start);
+            resetvar();
         }else if (keyCode == KeyEvent.VK_M && start){
             start = false;
-            System.out.println(start);
         }else if (keyCode == KeyEvent.VK_Q && gameend){
             gameend = false;
+            resetvar();
+            if (start){
+                start = false;
+            }
         }
     }
     @Override
@@ -108,7 +123,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     }
     public void timerlogic(){ //sets up the timer ui
         if (start == false){
-            timercount = 5;
+            timercount = settime;
         }else if (start == true){
             timercount--;
         }
@@ -127,8 +142,14 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             if (timercount <= -1){
                 start = false;
                 gameend = true;
+                s.addScore(score);
+                s.maxScore(score);
+                timercount = 0;
             }
             repaint();
+        }
+        if (e.getSource() == tracer){
+            detectm1 = false;
         }
     }
     @Override
@@ -159,10 +180,13 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             repaint();
             super.paintComponent(g);
             g.setColor(Color.BLACK);
+            g.setFont(new Font("Arial", Font.BOLD, 16));
+            g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
             g.setFont(new Font("Arial", Font.PLAIN, 30));
             g.drawString("Press \"m\" to start", 360, 260);
             g.setFont(new Font("Arial", Font.PLAIN, 16));
-            g.drawString("Total score: " + s.getTotalScore(), 10, 15);
+            g.drawString("Total score: " + s.getTotalScore(), 5, 15);
+            g.drawString("High Score: " + s.getMaxscore(), 5, 35);
         }
     }
     private void displayscore(Graphics g){ // basically what to display after the game ends
@@ -181,9 +205,15 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         g.setFont(new Font("Arial", Font.BOLD, 16));
         g.setColor(Color.BLACK);
         g.drawString("Score: " + score, 50, 30);
-        g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
         g.drawString("Time: " + (timercount), 200, 30);
         g.setColor(Color.RED);
         g.fillOval(xpos,ypos,radius * 2,radius * 2);
+    }
+    public void resetvar(){ //DO NOT DELETE OR MODIFY as it resets some of the variables (used for calibration)
+        timercount = settime;
+        score = 0;
+    }
+    public void drawtracers(Graphics g){
+        g.drawLine(600, 400, mousex, mousey);
     }
 }
