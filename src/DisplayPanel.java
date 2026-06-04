@@ -25,7 +25,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private int mousex;
     private int mousey;
     private Point mpos; //mouse pos
-    private int timercount; //counts the ms for the ingame timer not the timer object
+    private int timercount; //counts the ms for the ingame timer not the timer object (important)
     private Timer timer;
     private Timer clockTimer;
     private boolean gameend;
