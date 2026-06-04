@@ -38,6 +38,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private Timer cooldown;
 
     public DisplayPanel() {
+        clickrate = 160;
         settime = 5;
         timercount = 0;
         s = new Tscore(0);
@@ -52,7 +53,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         timer = new Timer(10, this);
         clockTimer = new Timer(1000, this);
         tracer = new Timer(75, this);
-        cooldown = new Timer(300, this);
+        cooldown = new Timer(clickrate, this);
         timer.start();
         clockTimer.start();
     }
@@ -66,9 +67,9 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             drawtracers(g);
         }
     }
-    public void changepos(){
-        ranposx = (int) (Math.random() * 861);
-        ranposy = (int) (Math.random() * 471);
+    public void changepos(){ //randomizes the position of the target after getting clicked on
+        ranposx = (int) (Math.random() * 561) + 200;
+        ranposy = (int) (Math.random() * 341) + 60;
         xpos = ranposx;
         ypos = ranposy;
         requestFocusInWindow();
@@ -79,15 +80,16 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     }
     @Override
     public void mousePressed(MouseEvent e) { // unimplemented
-        if (e.getButton() == MouseEvent.BUTTON1 && !detectm1 && !m1cooldown){
+        if (e.getButton() == MouseEvent.BUTTON1 && !detectm1 && !m1cooldown && start){
             detectm1 = true;
             m1cooldown = true;
             tracer.start();
             cooldown.start();
+            System.out.println("pew");
         }
     }
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(MouseEvent e) {   //adds score if player clicks on target
         if (e.getButton() == MouseEvent.BUTTON1 && inradofcircle() && start){
             score++;
             repaint();
@@ -109,12 +111,12 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        if (keyCode == KeyEvent.VK_M && start == false){ //turns the game on or off
+        if (keyCode == KeyEvent.VK_M && !start && !gameend){ //turns the game on or off
             start = true;
             resetvar();
         }else if (keyCode == KeyEvent.VK_M && start){
             start = false;
-        }else if (keyCode == KeyEvent.VK_Q && gameend){
+        }else if (keyCode == KeyEvent.VK_Q && gameend){ //resets the game
             gameend = false;
             resetvar();
             if (start){
@@ -134,8 +136,8 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         }
     }
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == timer) { //checks constantly if the mouse is close enough to the target or nah
+    public void actionPerformed(ActionEvent e) { //DO NOT DELETE THIS METHOD
+        if (e.getSource() == timer) { //checks constantly if the mouse is close enough to the target or nah (don't delete)
             inradofcircle();
 //            if (inradofcircle()){
 //                System.out.println("magic");
@@ -155,9 +157,11 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         }
         if (e.getSource() == tracer){
             detectm1 = false;
+            tracer.stop();
         }
         if (e.getSource() == cooldown){
             m1cooldown = false;
+            cooldown.stop();
         }
     }
     @Override
@@ -183,7 +187,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             return false;
         }
     }
-    private void startscreen(Graphics g){  // basically menu screen stuff
+    private void startscreen(Graphics g){  // basically displays menu screen stuff
         if (!start && !gameend) { //for if start is false
             super.paintComponent(g);
             background(g);
@@ -214,20 +218,25 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         background(g);
         g.setFont(new Font("Arial", Font.BOLD, 16));
         g.setColor(Color.BLACK);
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.BOLD, 16));
+        g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
         g.drawString("Score: " + score, 50, 30);
         g.drawString("Time: " + (timercount), 200, 30);
         g.setColor(Color.RED);
         g.fillOval(xpos,ypos,radius * 2,radius * 2);
     }
-    public void resetvar(){ //DO NOT DELETE OR MODIFY as it resets some of the variables (used for calibration)
+    public void resetvar(){ //resets some of the variables (used for calibration)
         timercount = settime;
         score = 0;
     }
-    public void drawtracers(Graphics g){
-        g.setColor(Color.YELLOW);
-        g.drawLine(600, 400, mousex, mousey);
+    public void drawtracers(Graphics g){ //draws the tracers for the gun or laser gun
+        g.setColor(new Color(254, 225, 43));
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(3));
+        g2.drawLine(800, 430, mousex, mousey);
     }
-    public void background(Graphics g){
+    public void background(Graphics g){ //supposed to be background (marked red, the code doesn't work as intended)
         g.setColor(new Color(0, 175, 175));
         g.drawRect(0, 0, getWidth(), getHeight());
     }

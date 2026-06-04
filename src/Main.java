@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Super Mario Game");
+        JFrame frame = new JFrame("Aim Labs but Bad");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(960, 580);
         frame.setLocationRelativeTo(null);
