@@ -15,5 +15,6 @@ public class Main {
         frame.add(panel);
         // call setVisible after everything else
         frame.setVisible(true);
+
     }
 }

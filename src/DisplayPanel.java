@@ -34,6 +34,8 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private boolean detectm1; //detects if player click (important)
     private Timer tracer;
     private int clickrate;
+    private boolean m1cooldown;
+    private Timer cooldown;
 
     public DisplayPanel() {
         settime = 5;
@@ -49,7 +51,8 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         changepos();
         timer = new Timer(10, this);
         clockTimer = new Timer(1000, this);
-        tracer = new Timer(100, this);
+        tracer = new Timer(75, this);
+        cooldown = new Timer(300, this);
         timer.start();
         clockTimer.start();
     }
@@ -76,9 +79,11 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     }
     @Override
     public void mousePressed(MouseEvent e) { // unimplemented
-        if (e.getButton() == MouseEvent.BUTTON1 && !detectm1){
+        if (e.getButton() == MouseEvent.BUTTON1 && !detectm1 && !m1cooldown){
             detectm1 = true;
+            m1cooldown = true;
             tracer.start();
+            cooldown.start();
         }
     }
     @Override
@@ -151,6 +156,9 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         if (e.getSource() == tracer){
             detectm1 = false;
         }
+        if (e.getSource() == cooldown){
+            m1cooldown = false;
+        }
     }
     @Override
     public void mouseDragged(MouseEvent e) {
@@ -177,8 +185,8 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     }
     private void startscreen(Graphics g){  // basically menu screen stuff
         if (!start && !gameend) { //for if start is false
-            repaint();
             super.paintComponent(g);
+            background(g);
             g.setColor(Color.BLACK);
             g.setFont(new Font("Arial", Font.BOLD, 16));
             g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
@@ -191,6 +199,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     }
     private void displayscore(Graphics g){ // basically what to display after the game ends
         super.paintComponent(g);
+        background(g);
         g.setColor(Color.BLACK);
         g.setFont(new Font("Arial", Font.PLAIN, 30));
         g.drawString("Your score was: " + score, 360, 260);
@@ -202,6 +211,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         }
     }
     private void displaytarget(Graphics g){ //what to display when the game is going on
+        background(g);
         g.setFont(new Font("Arial", Font.BOLD, 16));
         g.setColor(Color.BLACK);
         g.drawString("Score: " + score, 50, 30);
@@ -214,6 +224,11 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         score = 0;
     }
     public void drawtracers(Graphics g){
+        g.setColor(Color.YELLOW);
         g.drawLine(600, 400, mousex, mousey);
+    }
+    public void background(Graphics g){
+        g.setColor(new Color(0, 175, 175));
+        g.drawRect(0, 0, getWidth(), getHeight());
     }
 }
