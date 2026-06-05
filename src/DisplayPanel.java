@@ -36,6 +36,10 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private int clickrate;
     private boolean m1cooldown;
     private Timer cooldown;
+    private int ranXdisplacement;
+    private int ranYdisplacement;
+    private int clicks;
+    private int hits;
 
     public DisplayPanel() {
         clickrate = 160;
@@ -66,6 +70,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         if (detectm1){
             drawtracers(g);
         }
+        displaysoundeff(g);
     }
     public void changepos(){ //randomizes the position of the target after getting clicked on
         ranposx = (int) (Math.random() * 561) + 200;
@@ -85,7 +90,9 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             m1cooldown = true;
             tracer.start();
             cooldown.start();
-            System.out.println("pew");
+            ranXdisplacement = (int) (Math.random() * 61) - 120;
+            ranYdisplacement = (int) (Math.random() * 20) - 38;
+            clicks++;
         }
     }
     @Override
@@ -94,6 +101,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             score++;
             repaint();
             changepos();
+            hits++;
         }
     }
     @Override
@@ -239,5 +247,12 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     public void background(Graphics g){ //supposed to be background (marked red, the code doesn't work as intended)
         g.setColor(new Color(0, 175, 175));
         g.drawRect(0, 0, getWidth(), getHeight());
+    }
+    public void displaysoundeff(Graphics g){
+        if (m1cooldown){
+            g.setColor(Color.BLACK);
+            g.setFont(new Font("Arial", Font.BOLD, 16));
+            g.drawString("*pew*", 850 + ranXdisplacement, 385 + ranYdisplacement);
+        }
     }
 }
