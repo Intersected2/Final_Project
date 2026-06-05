@@ -38,8 +38,9 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private Timer cooldown;
     private int ranXdisplacement;
     private int ranYdisplacement;
-    private int clicks;
-    private int hits;
+    private double clicks;
+    private double hits;
+    private int accuracy;
 
     public DisplayPanel() {
         clickrate = 160;
@@ -60,6 +61,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         cooldown = new Timer(clickrate, this);
         timer.start();
         clockTimer.start();
+        System.out.println(hits);
     }
     @Override
     public void paintComponent(Graphics g) {
@@ -93,6 +95,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             ranXdisplacement = (int) (Math.random() * 61) - 120;
             ranYdisplacement = (int) (Math.random() * 20) - 38;
             clicks++;
+            accuracy = (int) Math.round((hits * 100) / clicks);
         }
     }
     @Override
@@ -231,12 +234,16 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
         g.drawString("Score: " + score, 50, 30);
         g.drawString("Time: " + (timercount), 200, 30);
+        g.drawString("Accuracy: " + accuracy + "%", 800, 30);
         g.setColor(Color.RED);
         g.fillOval(xpos,ypos,radius * 2,radius * 2);
     }
     public void resetvar(){ //resets some of the variables (used for calibration)
         timercount = settime;
         score = 0;
+        hits = 0;
+        clicks = 0;
+        accuracy = 0;
     }
     public void drawtracers(Graphics g){ //draws the tracers for the gun or laser gun
         g.setColor(new Color(254, 225, 43));
