@@ -30,7 +30,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private Timer clockTimer;
     private boolean gameend;
     private Tscore s;
-    private int settime;
+    private int settime; //sets the amount of time u will have
     private boolean detectm1; //detects if player click (important)
     private Timer tracer;
     private int clickrate;
@@ -41,10 +41,13 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private double clicks;
     private double hits;
     private int accuracy;
+    private double idistance;
+    private int bullseye;
+    private boolean bullseyeactive;
 
     public DisplayPanel() {
         clickrate = 160;
-        settime = 5;
+        settime = 15;
         timercount = 0;
         s = new Tscore(0);
         radius = 25;
@@ -61,11 +64,11 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         cooldown = new Timer(clickrate, this);
         timer.start();
         clockTimer.start();
-        System.out.println(hits);
     }
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        background(g);
         displaytarget(g);
         startscreen(g);
         checksgameend(g);
@@ -80,6 +83,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         xpos = ranposx;
         ypos = ranposy;
         requestFocusInWindow();
+        bullseye();
     }
     @Override
     public void mouseClicked(MouseEvent e) {  // unimplemented
@@ -103,7 +107,11 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     @Override
     public void mouseReleased(MouseEvent e) {   //adds score if player clicks on target
         if (e.getButton() == MouseEvent.BUTTON1 && inradofcircle() && start){
-            score++;
+            if (inradofinnercircle()){
+                score += 2;
+            }else{
+                score++;
+            }
             repaint();
             changepos();
         }
@@ -126,11 +134,14 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         if (keyCode == KeyEvent.VK_M && !start && !gameend){ //turns the game on or off
             start = true;
             resetvar();
+            changepos();
         }else if (keyCode == KeyEvent.VK_M && start){
             start = false;
+            changepos();
         }else if (keyCode == KeyEvent.VK_Q && gameend){ //resets the game
             gameend = false;
             resetvar();
+            changepos();
             if (start){
                 start = false;
             }
@@ -151,6 +162,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     public void actionPerformed(ActionEvent e) { //DO NOT DELETE THIS METHOD
         if (e.getSource() == timer) { //checks constantly if the mouse is close enough to the target or nah (don't delete)
             inradofcircle();
+            inradofinnercircle();
             repaint();
         }
         if (e.getSource() == clockTimer) {
@@ -162,9 +174,6 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
                 s.maxScore(score);
                 timercount = 0;
             }
-            System.out.println(accuracy);
-            System.out.println(hits + " hits");
-            System.out.println(clicks + " clicks");
             repaint();
         }
         if (e.getSource() == tracer){
@@ -196,6 +205,20 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         ramy = ramy * ramy;
         distance = Math.sqrt(ramx + ramy);
         if (distance < radius){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    private boolean inradofinnercircle(){ // finds the distance between the center of the circle and mouse location
+        double ramx = 0;
+        double ramy = 0;
+        ramx = Math.abs(mousex - xpos - radius);
+        ramx = ramx * ramx;
+        ramy = Math.abs(mousey - radius - ypos);
+        ramy = ramy * ramy;
+        idistance = Math.sqrt(ramx + ramy);
+        if (idistance <= radius / 4 && bullseyeactive){
             return true;
         }else {
             return false;
@@ -240,6 +263,10 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         g.drawString("Accuracy: " + accuracy + "%", 800, 30);
         g.setColor(Color.RED);
         g.fillOval(xpos,ypos,radius * 2,radius * 2);
+        g.setColor(Color.BLACK);
+        if (bullseyeactive){
+            g.fillOval(xpos + (radius * 3 / 4) + 1,ypos + (radius * 3 / 4) + 1,radius / 2,radius / 2);
+        }
     }
     public void resetvar(){ //resets some of the variables (used for calibration)
         timercount = settime;
@@ -247,6 +274,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         hits = 0;
         clicks = 0;
         accuracy = 0;
+        bullseyeactive = false;
     }
     public void drawtracers(Graphics g){ //draws the tracers for the gun or laser gun
         g.setColor(new Color(254, 225, 43));
@@ -263,6 +291,14 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             g.setColor(Color.BLACK);
             g.setFont(new Font("Arial", Font.BOLD, 16));
             g.drawString("*pew*", 850 + ranXdisplacement, 385 + ranYdisplacement);
+        }
+    }
+    public void bullseye(){
+        bullseye = (int) (Math.random() * 4) + 1;
+        if (bullseye > 3){
+            bullseyeactive = true;
+        }else{
+            bullseyeactive = false;
         }
     }
 }
