@@ -95,7 +95,9 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             ranXdisplacement = (int) (Math.random() * 61) - 120;
             ranYdisplacement = (int) (Math.random() * 20) - 38;
             clicks++;
-            accuracy = (int) Math.round((hits * 100) / clicks);
+        }
+        if (inradofcircle()){
+            hits++;
         }
     }
     @Override
@@ -104,7 +106,6 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             score++;
             repaint();
             changepos();
-            hits++;
         }
     }
     @Override
@@ -150,9 +151,6 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     public void actionPerformed(ActionEvent e) { //DO NOT DELETE THIS METHOD
         if (e.getSource() == timer) { //checks constantly if the mouse is close enough to the target or nah (don't delete)
             inradofcircle();
-//            if (inradofcircle()){
-//                System.out.println("magic");
-//            }
             repaint();
         }
         if (e.getSource() == clockTimer) {
@@ -164,16 +162,21 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
                 s.maxScore(score);
                 timercount = 0;
             }
+            System.out.println(accuracy);
+            System.out.println(hits + " hits");
+            System.out.println(clicks + " clicks");
             repaint();
         }
         if (e.getSource() == tracer){
             detectm1 = false;
+            accuracy = (int) (Math.round((hits * 100) / clicks));
             tracer.stop();
         }
         if (e.getSource() == cooldown){
             m1cooldown = false;
             cooldown.stop();
         }
+        repaint();
     }
     @Override
     public void mouseDragged(MouseEvent e) {
