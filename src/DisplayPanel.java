@@ -44,8 +44,10 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private double idistance;
     private int bullseye;
     private boolean bullseyeactive;
+    private int chanceofbullseye;
 
     public DisplayPanel() {
+        chanceofbullseye = 7; //it means 1 out of how many tries on average can u get a bullseye
         clickrate = 160;
         settime = 15;
         timercount = 0;
@@ -283,8 +285,8 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         g2.drawLine(800, 430, mousex, mousey);
     }
     public void background(Graphics g){ //supposed to be background (marked red, the code doesn't work as intended)
-        g.setColor(new Color(0, 175, 175));
-        g.drawRect(0, 0, getWidth(), getHeight());
+        g.setColor(new Color(175, 175, 175));
+        g.fillRect(0, 0, 960, 580);
     }
     public void displaysoundeff(Graphics g){
         if (m1cooldown){
@@ -294,8 +296,8 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         }
     }
     public void bullseye(){
-        bullseye = (int) (Math.random() * 4) + 1;
-        if (bullseye > 3){
+        bullseye = (int) (Math.random() * chanceofbullseye) + 1;
+        if (bullseye > chanceofbullseye - 1){
             bullseyeactive = true;
         }else{
             bullseyeactive = false;
