@@ -270,9 +270,12 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         g.drawString("Score: " + score, 50, 30);
         g.drawString("Time: " + (timercount), 200, 30);
         g.drawString("Accuracy: " + accuracy + "%", 800, 30);
+        g.drawOval(xpos,ypos,radius * 2,radius * 2);
         g.setColor(Color.RED);
         g.fillOval(xpos,ypos,radius * 2,radius * 2);
         g.setColor(Color.BLACK);
+        g.drawLine(xpos, ypos + radius, xpos + (2 * radius), ypos + radius);
+        g.drawLine(xpos + radius, ypos, xpos + radius, ypos + (2 * radius));
         if (bullseyeactive){
             g.fillOval(xpos + (radius * 3 / 4) + 1,ypos + (radius * 3 / 4) + 1,radius / 2,radius / 2);
         }
