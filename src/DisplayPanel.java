@@ -45,6 +45,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private int bullseye;
     private boolean bullseyeactive;
     private int chanceofbullseye;
+    private BufferedImage title;
 
     public DisplayPanel() {
         chanceofbullseye = 7; //it means 1 out of how many tries on average can u get a bullseye
@@ -54,6 +55,11 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         s = new Tscore(0);
         radius = 25;
         score = 0;
+        try{
+            title =ImageIO.read(new File("src/Title.png"));
+        } catch (IOException e) {
+            System.out.println("File for the variable \"title\" is not found");
+        }
         addMouseListener(this);
         addKeyListener(this);
         addMouseMotionListener(this);
@@ -230,6 +236,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         if (!start && !gameend) { //for if start is false
             super.paintComponent(g);
             background(g);
+            g.drawImage(title, 195 , 170, null);
             g.setColor(Color.BLACK);
             g.setFont(new Font("Arial", Font.BOLD, 16));
             g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
