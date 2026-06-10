@@ -51,7 +51,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     public DisplayPanel() {
         chanceofbullseye = 7; //it means 1 out of how many tries on average can u get a bullseye
         clickrate = 160;
-        settime = 15;
+        settime = 5;
         timercount = 0;
         s = new Tscore(0);
         radius = 25;
@@ -257,13 +257,25 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         }
     }
     private void displayscore(Graphics g){ // basically what to display after the game ends
+        FontMetrics ram;
+        int ram1 = 0;
         super.paintComponent(g);
         background(g);
         g.setColor(Color.BLACK);
         g.setFont(new Font("Arial", Font.PLAIN, 30));
-        g.drawString("Your accuracy was: " + accuracy + "%", 320, 220);
-        g.drawString("Your score was: " + score, 360, 260);
-        g.drawString("Press \"q\" to go back to the menu", 265, 300);
+        ram1 =  g.getFontMetrics().stringWidth("Your accuracy was:    %");
+        g.drawString("Your accuracy was: " + accuracy + "%", (960 - ram1) / 2, 220);
+        ram1 =  g.getFontMetrics().stringWidth("Your score was:   ");
+        g.drawString("Your score was: " + score, (960 - ram1) / 2, 260);
+        ram1 =  g.getFontMetrics().stringWidth("Press \"q\" to go back to the menu");
+        g.drawString("Press \"q\" to go back to the menu", (960 - ram1) / 2, 300);
+        if (score < settime * 3 / 2){
+            ram1 =  g.getFontMetrics().stringWidth("My grandmother can get a higher score than that, LOCK IN");
+            g.drawString("My grandmother can get a higher score than that, LOCK IN", (960 - ram1) / 2,340);
+        }else{
+            ram1 =  g.getFontMetrics().stringWidth("Good job!");
+            g.drawString("Good job!", (960 - ram1) / 2,340);
+        }
     }
     private void checksgameend(Graphics g){ //just checks if game ends
         if (gameend){
