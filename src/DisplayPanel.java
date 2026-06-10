@@ -51,7 +51,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     public DisplayPanel() {
         chanceofbullseye = 7; //it means 1 out of how many tries on average can u get a bullseye
         clickrate = 160;
-        settime = 5;
+        settime = 30;
         timercount = 0;
         s = new Tscore(0);
         radius = 25;
@@ -242,15 +242,17 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         }
     }
     private void startscreen(Graphics g){  // basically displays menu screen stuff
+        int ram;
         if (!start && !gameend) { //for if start is false
             super.paintComponent(g);
             background(g);
             g.drawImage(title, 195 , 170, null);
             g.setColor(Color.BLACK);
             g.setFont(new Font("Arial", Font.BOLD, 16));
-            g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
+//            g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
             g.setFont(new Font("Arial", Font.PLAIN, 30));
-            g.drawString("Press \"m\" to start", 360, 260);
+            ram = g.getFontMetrics().stringWidth("Press \"m\" to start");
+            g.drawString("Press \"m\" to start", (960 - ram) / 2, 260);
             g.setFont(new Font("Arial", Font.PLAIN, 16));
             g.drawString("Total score: " + s.getTotalScore(), 5, 15);
             g.drawString("High Score: " + s.getMaxscore(), 5, 35);
@@ -288,7 +290,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         g.setColor(Color.BLACK);
         g.setColor(Color.BLACK);
         g.setFont(new Font("Arial", Font.BOLD, 16));
-        g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
+//        g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
         g.drawString("Score: " + score, 50, 30);
         g.drawString("Time: " + (timercount), 200, 30);
         g.drawString("Accuracy: " + accuracy + "%", 800, 30);
