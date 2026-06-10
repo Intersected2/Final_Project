@@ -50,10 +50,10 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
 
     public DisplayPanel() {
         chanceofbullseye = 7; //it means 1 out of how many tries on average can u get a bullseye
-        clickrate = 160;
-        settime = 30;
+        clickrate = 160;  //cool down to prevent spamming
+        settime = 30;  //the time you are given
         timercount = 0;
-        s = new Tscore(0);
+        s = new Tscore(0);  //you can set points with this ig
         radius = 25;
         score = 0;
         try{
@@ -249,7 +249,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             g.drawImage(title, 195 , 170, null);
             g.setColor(Color.BLACK);
             g.setFont(new Font("Arial", Font.BOLD, 16));
-//            g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
+//            g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);   (for testing)
             g.setFont(new Font("Arial", Font.PLAIN, 30));
             ram = g.getFontMetrics().stringWidth("Press \"m\" to start");
             g.drawString("Press \"m\" to start", (960 - ram) / 2, 260);
@@ -290,7 +290,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         g.setColor(Color.BLACK);
         g.setColor(Color.BLACK);
         g.setFont(new Font("Arial", Font.BOLD, 16));
-//        g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);
+//        g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);  (for testing)
         g.drawString("Score: " + score, 50, 30);
         g.drawString("Time: " + (timercount), 200, 30);
         g.drawString("Accuracy: " + accuracy + "%", 800, 30);
@@ -324,18 +324,18 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         g2.setStroke(new BasicStroke(3));
         g2.drawLine(780, 410, mousex, mousey);
     }
-    public void background(Graphics g){ //supposed to be background (marked red, the code doesn't work as intended)
+    public void background(Graphics g){ //displays backgorund
         g.setColor(new Color(175, 175, 175));
         g.fillRect(0, 0, 960, 580);
     }
-    public void displaysoundeff(Graphics g){
+    public void displaysoundeff(Graphics g){  //displays *pew*
         if (m1cooldown){
             g.setColor(Color.BLACK);
             g.setFont(new Font("Arial", Font.BOLD, 16));
             g.drawString("*pew*", 850 + ranXdisplacement, 390 + ranYdisplacement);
         }
     }
-    public void bullseye(){
+    public void bullseye(){  //basically the crit hit function
         bullseye = (int) (Math.random() * chanceofbullseye) + 1;
         if (bullseye > chanceofbullseye - 1){
             bullseyeactive = true;
@@ -343,7 +343,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             bullseyeactive = false;
         }
     }
-    private void drawwatergun(Graphics g){
+    private void drawwatergun(Graphics g){  //displays the water gun
         g.drawImage(pew, 770, 370, null);
     }
 }
