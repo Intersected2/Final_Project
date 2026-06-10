@@ -95,7 +95,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         displaysoundeff(g);
     }
     public void changepos(){ //randomizes the position of the target after getting clicked on
-        ranposx = (int) (Math.random() * 561) + 200;
+        ranposx = (int) (Math.random() * 461) + 250;
         ranposy = (int) (Math.random() * 341) + 60;
         xpos = ranposx;
         ypos = ranposy;
@@ -319,7 +319,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         bullseyeactive = false;
     }
     public void drawtracers(Graphics g){ //draws the tracers for the gun or laser gun
-        g.setColor(new Color(254, 225, 43));
+        g.setColor(new Color(14, 136, 253, 255));
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(3));
         g2.drawLine(780, 410, mousex, mousey);
