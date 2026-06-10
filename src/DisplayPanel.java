@@ -46,6 +46,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private boolean bullseyeactive;
     private int chanceofbullseye;
     private BufferedImage title;
+    private BufferedImage pew;
 
     public DisplayPanel() {
         chanceofbullseye = 7; //it means 1 out of how many tries on average can u get a bullseye
@@ -56,9 +57,14 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         radius = 25;
         score = 0;
         try{
-            title =ImageIO.read(new File("src/Title.png"));
+            title = ImageIO.read(new File("src/Title.png"));
         } catch (IOException e) {
             System.out.println("File for the variable \"title\" is not found");
+        }
+        try{
+            pew = ImageIO.read(new File("src/pew.png"));
+        } catch (IOException e){
+            System.out.println("File for the variable \"pew\" is not found");
         }
         addMouseListener(this);
         addKeyListener(this);
@@ -82,6 +88,9 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         checksgameend(g);
         if (detectm1){
             drawtracers(g);
+        }
+        if (start){
+            drawwatergun(g);
         }
         displaysoundeff(g);
     }
@@ -276,6 +285,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         g.setColor(Color.BLACK);
         g.drawLine(xpos, ypos + radius, xpos + (2 * radius), ypos + radius);
         g.drawLine(xpos + radius, ypos, xpos + radius, ypos + (2 * radius));
+        g.drawImage(pew, 770, 370, null);
         if (bullseyeactive){
             g.fillOval(xpos + (radius * 3 / 4) + 1,ypos + (radius * 3 / 4) + 1,radius / 2,radius / 2);
         }
@@ -292,7 +302,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         g.setColor(new Color(254, 225, 43));
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(3));
-        g2.drawLine(800, 430, mousex, mousey);
+        g2.drawLine(780, 410, mousex, mousey);
     }
     public void background(Graphics g){ //supposed to be background (marked red, the code doesn't work as intended)
         g.setColor(new Color(175, 175, 175));
@@ -302,7 +312,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         if (m1cooldown){
             g.setColor(Color.BLACK);
             g.setFont(new Font("Arial", Font.BOLD, 16));
-            g.drawString("*pew*", 850 + ranXdisplacement, 385 + ranYdisplacement);
+            g.drawString("*pew*", 850 + ranXdisplacement, 390 + ranYdisplacement);
         }
     }
     public void bullseye(){
@@ -312,5 +322,8 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         }else{
             bullseyeactive = false;
         }
+    }
+    private void drawwatergun(Graphics g){
+        g.drawImage(pew, 770, 370, null);
     }
 }
