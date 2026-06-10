@@ -291,6 +291,10 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         if (bullseyeactive){
             g.fillOval(xpos + (radius * 3 / 4) + 1,ypos + (radius * 3 / 4) + 1,radius / 2,radius / 2);
         }
+        g.drawLine(mousex - 25, mousey, mousex - 6, mousey);
+        g.drawLine(mousex + 6, mousey, mousex + 25, mousey);
+        g.drawLine(mousex, mousey - 25, mousex, mousey - 6);
+        g.drawLine(mousex, mousey + 6, mousex, mousey + 25);
     }
     public void resetvar(){ //resets some of the variables (used for calibration)
         timercount = settime;
