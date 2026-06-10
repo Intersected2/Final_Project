@@ -261,6 +261,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         background(g);
         g.setColor(Color.BLACK);
         g.setFont(new Font("Arial", Font.PLAIN, 30));
+        g.drawString("Your accuracy was: " + accuracy + "%", 320, 220);
         g.drawString("Your score was: " + score, 360, 260);
         g.drawString("Press \"q\" to go back to the menu", 265, 300);
     }
@@ -279,6 +280,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         g.drawString("Score: " + score, 50, 30);
         g.drawString("Time: " + (timercount), 200, 30);
         g.drawString("Accuracy: " + accuracy + "%", 800, 30);
+        g.drawString("Press \"m\" again to return to menu", 10,530);
         g.drawOval(xpos,ypos,radius * 2,radius * 2);
         g.setColor(Color.RED);
         g.fillOval(xpos,ypos,radius * 2,radius * 2);
