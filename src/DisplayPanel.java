@@ -47,11 +47,13 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private int chanceofbullseye;
     private BufferedImage title;
     private BufferedImage pew;
+    private BufferedImage background;
+    private BufferedImage target;
 
     public DisplayPanel() {
         chanceofbullseye = 7; //it means 1 out of how many tries on average can u get a bullseye
         clickrate = 160;  //cool down to prevent spamming
-        settime = 30;  //the time you are given
+        settime = 5;  //the time you are given
         timercount = 0;
         s = new Tscore(0);  //you can set points with this ig
         radius = 25;
@@ -65,6 +67,16 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             pew = ImageIO.read(new File("src/pew.png"));
         } catch (IOException e){
             System.out.println("File for the variable \"pew\" is not found");
+        }
+        try{
+            background = ImageIO.read(new File("src/background.jpg"));
+        }catch (IOException e){
+            System.out.println("File for the variable \"background\" is not found");
+        }
+        try{
+            target = ImageIO.read(new File("src/target.jpg"));
+        }catch (IOException e){
+            System.out.println("File for the variable \"target\" is not found");
         }
         addMouseListener(this);
         addKeyListener(this);
@@ -247,7 +259,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             super.paintComponent(g);
             background(g);
             g.drawImage(title, 195 , 170, null);
-            g.setColor(Color.BLACK);
+            g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", Font.BOLD, 16));
 //            g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);   (for testing)
             g.setFont(new Font("Arial", Font.PLAIN, 30));
@@ -263,17 +275,17 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         int ram1 = 0;
         super.paintComponent(g);
         background(g);
-        g.setColor(Color.BLACK);
+        g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.PLAIN, 30));
         ram1 =  g.getFontMetrics().stringWidth("Your accuracy was:    %");
-        g.drawString("Your accuracy was: " + accuracy + "%", (960 - ram1) / 2, 220);
+        g.drawString("Your accuracy was: " + accuracy + "%", (960 - ram1) / 2, 180);
         ram1 =  g.getFontMetrics().stringWidth("Your score was:   ");
-        g.drawString("Your score was: " + score, (960 - ram1) / 2, 260);
+        g.drawString("Your score was: " + score, (960 - ram1) / 2, 220);
         ram1 =  g.getFontMetrics().stringWidth("Press \"q\" to go back to the menu");
-        g.drawString("Press \"q\" to go back to the menu", (960 - ram1) / 2, 300);
+        g.drawString("Press \"q\" to go back to the menu", (960 - ram1) / 2, 260);
         if (score < settime * 3 / 2){
             ram1 =  g.getFontMetrics().stringWidth("My grandmother can get a higher score than that, LOCK IN");
-            g.drawString("My grandmother can get a higher score than that, LOCK IN", (960 - ram1) / 2,340);
+            g.drawString("My grandmother can get a higher score than that, LOCK IN", (960 - ram1) / 2,300);
         }else{
             ram1 =  g.getFontMetrics().stringWidth("Good job!");
             g.drawString("Good job!", (960 - ram1) / 2,340);
@@ -287,24 +299,20 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private void displaytarget(Graphics g){ //what to display when the game is going on
         background(g);
         g.setFont(new Font("Arial", Font.BOLD, 16));
-        g.setColor(Color.BLACK);
-        g.setColor(Color.BLACK);
+        g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 16));
 //        g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);  (for testing)
         g.drawString("Score: " + score, 50, 30);
         g.drawString("Time: " + (timercount), 200, 30);
         g.drawString("Accuracy: " + accuracy + "%", 800, 30);
         g.drawString("Press \"m\" again to return to menu", 10,530);
-        g.drawOval(xpos,ypos,radius * 2,radius * 2);
-        g.setColor(Color.RED);
-        g.fillOval(xpos,ypos,radius * 2,radius * 2);
-        g.setColor(Color.BLACK);
-        g.drawLine(xpos, ypos + radius, xpos + (2 * radius), ypos + radius);
-        g.drawLine(xpos + radius, ypos, xpos + radius, ypos + (2 * radius));
+        g.drawImage(target, xpos, ypos, null);
         g.drawImage(pew, 770, 370, null);
+        g.setColor(Color.YELLOW);
         if (bullseyeactive){
             g.fillOval(xpos + (radius * 3 / 4) + 1,ypos + (radius * 3 / 4) + 1,radius / 2,radius / 2);
         }
+        g.setColor(Color.RED);
         g.drawLine(mousex - 25, mousey, mousex - 6, mousey);
         g.drawLine(mousex + 6, mousey, mousex + 25, mousey);
         g.drawLine(mousex, mousey - 25, mousex, mousey - 6);
@@ -325,8 +333,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         g2.drawLine(780, 410, mousex, mousey);
     }
     public void background(Graphics g){ //displays backgorund
-        g.setColor(new Color(175, 175, 175));
-        g.fillRect(0, 0, 960, 580);
+        g.drawImage(background, 0 , 0, null);
     }
     public void displaysoundeff(Graphics g){  //displays *pew*
         if (m1cooldown){
