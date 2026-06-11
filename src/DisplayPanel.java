@@ -258,7 +258,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         if (!start && !gameend) { //for if start is false
             super.paintComponent(g);
             background(g);
-            g.drawImage(title, 195 , 170, null);
+            g.drawImage(title, 339 , 140, null);
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", Font.BOLD, 16));
 //            g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);   (for testing)
@@ -285,10 +285,10 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         g.drawString("Press \"q\" to go back to the menu", (960 - ram1) / 2, 260);
         if (score < settime * 3 / 2){
             ram1 =  g.getFontMetrics().stringWidth("My grandmother can get a higher score than that, LOCK IN");
-            g.drawString("My grandmother can get a higher score than that, LOCK IN", (960 - ram1) / 2,300);
+            g.drawString("My grandmother can get a higher score than that, LOCK IN", (960 - ram1) / 2,380);
         }else{
             ram1 =  g.getFontMetrics().stringWidth("Good job!");
-            g.drawString("Good job!", (960 - ram1) / 2,340);
+            g.drawString("Good job!", (960 - ram1) / 2,380);
         }
     }
     private void checksgameend(Graphics g){ //just checks if game ends
