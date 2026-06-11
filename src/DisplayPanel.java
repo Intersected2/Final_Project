@@ -74,7 +74,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             System.out.println("File for the variable \"background\" is not found");
         }
         try{
-            target = ImageIO.read(new File("src/target.jpg"));
+            target = ImageIO.read(new File("src/target.png"));
         }catch (IOException e){
             System.out.println("File for the variable \"target\" is not found");
         }
@@ -285,10 +285,10 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         g.drawString("Press \"q\" to go back to the menu", (960 - ram1) / 2, 260);
         if (score < settime * 3 / 2){
             ram1 =  g.getFontMetrics().stringWidth("My grandmother can get a higher score than that, LOCK IN");
-            g.drawString("My grandmother can get a higher score than that, LOCK IN", (960 - ram1) / 2,380);
+            g.drawString("My grandmother can get a higher score than that, LOCK IN", (960 - ram1) / 2,340);
         }else{
             ram1 =  g.getFontMetrics().stringWidth("Good job!");
-            g.drawString("Good job!", (960 - ram1) / 2,380);
+            g.drawString("Good job!", (960 - ram1) / 2,340);
         }
     }
     private void checksgameend(Graphics g){ //just checks if game ends
