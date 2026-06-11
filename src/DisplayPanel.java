@@ -53,7 +53,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     public DisplayPanel() {
         chanceofbullseye = 7; //it means 1 out of how many tries on average can u get a bullseye
         clickrate = 160;  //cool down to prevent spamming
-        settime = 5;  //the time you are given
+        settime = 30;  //the time you are given
         timercount = 0;
         s = new Tscore(0);  //you can set points with this ig
         radius = 25;
@@ -258,7 +258,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         if (!start && !gameend) { //for if start is false
             super.paintComponent(g);
             background(g);
-            g.drawImage(title, 339 , 140, null);
+            g.drawImage(title, 291 , 140, null);
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", Font.BOLD, 16));
 //            g.drawString(String.valueOf(mousex) + " " + String.valueOf(mousey), 400, 30);   (for testing)
@@ -305,7 +305,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         g.drawString("Score: " + score, 50, 30);
         g.drawString("Time: " + (timercount), 200, 30);
         g.drawString("Accuracy: " + accuracy + "%", 800, 30);
-        g.drawString("Press \"m\" again to return to menu", 10,530);
+        g.drawString("Press \"m\" again to return to menu", 10,570);
         g.drawImage(target, xpos, ypos, null);
         g.drawImage(pew, 770, 370, null);
         g.setColor(Color.YELLOW);
